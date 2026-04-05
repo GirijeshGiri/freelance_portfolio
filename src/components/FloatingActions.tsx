@@ -1,11 +1,13 @@
 import { MessageCircle, Phone } from 'lucide-react';
 
 export default function FloatingActions() {
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER;
+
   return (
     <>
       {/* Desktop Floating WhatsApp */}
       <a
-        href="https://wa.me/8122934681"
+        href={`https://wa.me/${whatsappNumber}`}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform hidden md:flex items-center justify-center"
@@ -24,7 +26,7 @@ export default function FloatingActions() {
           Call Now
         </a>
         <a
-          href="https://wa.me/8122934681"
+          href={`https://wa.me/${whatsappNumber}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 bg-[#25D366] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"

@@ -1,7 +1,7 @@
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import WhoThisIsFor from './components/WhoThisIsFor';
-import LeadForm from './components/LeadForm';
+import ContactForm from './components/ContactForm';
 import Portfolio from './components/Portfolio';
 import WhyWorks from './components/WhyWorks';
 import Pricing from './components/Pricing';
@@ -28,7 +28,7 @@ export default function App() {
         <FAQ />
         <About />
         <CTA />
-        <LeadForm />
+        <ContactForm />
       </main>
       <Footer />
       <FloatingActions />

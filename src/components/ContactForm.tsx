@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { MessageCircle, Send, Loader2, CheckCircle2 } from 'lucide-react';
+import { Send, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { db, collection, addDoc, Timestamp, handleFirestoreError, OperationType } from '../firebase';
+import { db, collection, addDoc, serverTimestamp, handleFirestoreError, OperationType } from '../firebase/config';
+import { openWhatsApp } from '../utils/whatsapp';
 
-export default function LeadForm() {
+export default function ContactForm() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -13,32 +14,46 @@ export default function LeadForm() {
     timeline: '',
     message: ''
   });
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const WHATSAPP_NUMBER = "8122934681";
-  const EMAIL_RECIPIENT = "jeshgiri52@gmail.com";
+  const validateForm = () => {
+    if (!formData.name.trim()) return "Name is required";
+    if (!formData.phone.trim() || formData.phone.length < 10) return "Valid 10-digit phone number is required";
+    if (!formData.businessType) return "Business type is required";
+    if (!formData.requirement) return "Requirement is required";
+    if (!formData.budget) return "Budget is required";
+    if (!formData.timeline) return "Timeline is required";
+    return null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.phone.length < 10) {
+    const error = validateForm();
+    if (error) {
+      setErrorMessage(error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
       return;
     }
 
     setStatus('loading');
 
-    // 1. Prepare WhatsApp Message
-    const waMessage = `New Lead 🚀\nName: ${formData.name}\nPhone: ${formData.phone}\nBusiness: ${formData.businessType || 'N/A'}\nRequirement: ${formData.requirement || 'N/A'}\nBudget: ${formData.budget || 'N/A'}\nTimeline: ${formData.timeline || 'N/A'}\nMessage: ${formData.message || 'N/A'}`;
-    const waUrl = `https://wa.me/8122934681?text=${encodeURIComponent(waMessage)}`;
-
     try {
-      // 2. Store in Firestore (Leads)
+      // 1. Store in Firestore (Leads)
       await addDoc(collection(db, 'leads'), {
-        ...formData,
-        createdAt: Timestamp.now()
+        name: formData.name,
+        phone: formData.phone,
+        businessType: formData.businessType,
+        requirement: formData.requirement,
+        budget: formData.budget,
+        timeline: formData.timeline,
+        message: formData.message,
+        createdAt: serverTimestamp()
       });
 
-      // 3. Submit to FormSubmit (Email)
+      // 2. Submit to FormSubmit (Email) as a backup
       const formBody = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         formBody.append(key, String(value));
@@ -46,16 +61,23 @@ export default function LeadForm() {
       formBody.append('_subject', 'New G.H Web Solutions Lead');
       formBody.append('_captcha', 'false');
 
-      await fetch(`https://formsubmit.co/ajax/jeshgiri52@gmail.com`, {
+      // Note: We don't await this to speed up the UI, or we can await it if we want to be sure
+      fetch(`https://formsubmit.co/ajax/jeshgiri52@gmail.com`, {
         method: 'POST',
         body: formBody
-      });
+      }).catch(err => console.error("FormSubmit error:", err));
 
       setStatus('success');
       
       // Redirect to WhatsApp after a short delay
       setTimeout(() => {
-        window.open(waUrl, '_blank');
+        openWhatsApp({
+          businessType: formData.businessType,
+          budget: formData.budget,
+          timeline: formData.timeline,
+          referenceSite: '' // Optional reference site
+        });
+        
         setStatus('idle');
         setFormData({ 
           name: '', 
@@ -69,8 +91,11 @@ export default function LeadForm() {
       }, 1500);
 
     } catch (error) {
+      console.error("Submission error:", error);
       handleFirestoreError(error, OperationType.CREATE, 'leads');
-      setStatus('idle');
+      setStatus('error');
+      setErrorMessage("Something went wrong. Please try again.");
+      setTimeout(() => setStatus('idle'), 5000);
     }
   };
 
@@ -189,7 +214,9 @@ export default function LeadForm() {
               disabled={status !== 'idle'}
               type="submit"
               className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:opacity-70 ${
-                status === 'success' ? 'bg-green-500 text-white' : 'bg-black text-white hover:bg-gold hover:text-black'
+                status === 'success' ? 'bg-green-500 text-white' : 
+                status === 'error' ? 'bg-red-500 text-white' :
+                'bg-black text-white hover:bg-gold hover:text-black'
               }`}
             >
               <AnimatePresence mode="wait">
@@ -215,6 +242,16 @@ export default function LeadForm() {
                     <CheckCircle2 className="animate-bounce" />
                     Success! Redirecting...
                   </motion.div>
+                ) : status === 'error' ? (
+                  <motion.div
+                    key="error"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-3"
+                  >
+                    {errorMessage || "Error!"}
+                  </motion.div>
                 ) : (
                   <motion.div
                     key="idle"
@@ -229,9 +266,6 @@ export default function LeadForm() {
                 )}
               </AnimatePresence>
             </button>
-            {status === 'idle' && formData.phone && formData.phone.length > 0 && formData.phone.length < 10 && (
-              <p className="text-red-500 text-xs font-bold mt-2 text-center">Please enter a valid 10-digit phone number.</p>
-            )}
           </form>
           
           <div className="mt-8 text-center">

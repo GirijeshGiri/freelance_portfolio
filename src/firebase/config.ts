@@ -1,12 +1,20 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, doc, getDocFromServer, Timestamp } from 'firebase/firestore';
-import firebaseConfig from '../firebase-applet-config.json';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, doc, getDocFromServer, serverTimestamp, Timestamp, deleteDoc } from 'firebase/firestore';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
 // Error Handling Spec for Firestore Operations
@@ -73,18 +81,18 @@ async function testConnection() {
 }
 testConnection();
 
-export async function submitLead(formData: any) {
-  try {
-    const docRef = await addDoc(collection(db, 'leads'), {
-      ...formData,
-      status: 'new',
-      createdAt: Timestamp.now()
-    });
-    return docRef.id;
-  } catch (error) {
-    handleFirestoreError(error, OperationType.CREATE, 'leads');
-  }
-}
-
-export { collection, addDoc, onSnapshot, query, orderBy, limit, doc, Timestamp, signInWithPopup, signOut, onAuthStateChanged };
-export type { User };
+export { 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  query, 
+  orderBy, 
+  limit, 
+  doc, 
+  deleteDoc,
+  serverTimestamp, 
+  Timestamp, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged 
+};

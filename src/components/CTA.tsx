@@ -2,6 +2,8 @@ import { MessageCircle, Phone } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export default function CTA() {
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER;
+
   return (
     <section id="quick-contact" className="py-24 bg-black text-white relative overflow-hidden">
       {/* Background Accents */}
@@ -26,7 +28,7 @@ export default function CTA() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
             <a
-              href="https://wa.me/8122934681"
+              href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-[#25D366] text-white px-10 py-5 rounded-2xl text-xl font-bold hover:scale-105 transition-all flex items-center justify-center shadow-xl"

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Quote, LogIn, Send, User as UserIcon, LogOut } from 'lucide-react';
+import { Star, Quote, LogIn, Send, User as UserIcon, LogOut, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   db, auth, googleProvider, signInWithPopup, signOut, onAuthStateChanged, 
   collection, addDoc, onSnapshot, query, orderBy, limit, Timestamp,
-  handleFirestoreError, OperationType, User
-} from '../firebase';
+  handleFirestoreError, OperationType, doc, deleteDoc
+} from '../firebase/config';
+import type { User } from 'firebase/auth';
 
 interface Review {
   id?: string;
@@ -106,6 +107,17 @@ export default function Testimonials() {
       handleFirestoreError(error, OperationType.CREATE, 'reviews');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!user) return;
+    if (!window.confirm("Are you sure you want to delete your review?")) return;
+
+    try {
+      await deleteDoc(doc(db, 'reviews', reviewId));
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, `reviews/${reviewId}`);
     }
   };
 
@@ -249,6 +261,16 @@ export default function Testimonials() {
               >
                 <Quote className="absolute top-6 right-8 text-gold/10 group-hover:text-gold/20 transition-colors" size={60} />
                 
+                {user && user.uid === review.uid && (
+                  <button
+                    onClick={() => handleDeleteReview(review.id!)}
+                    className="absolute top-6 right-6 z-20 p-2 text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100"
+                    title="Delete your review"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                )}
+
                 <div className="flex gap-1 mb-6">
                   {[...Array(review.rating)].map((_, i) => (
                     <Star key={i} size={16} className="fill-gold text-gold" />
