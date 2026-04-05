@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import aboutImg from "../assets/about.jpeg";
 
 export default function About() {
   return (
@@ -14,7 +15,7 @@ export default function About() {
             <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white mx-auto">
               <div className="w-full h-full bg-black/5 flex items-center justify-center text-black/20">
                 <img 
-                  src="assets/about.jpg" 
+                  src={aboutImg}
                   alt="G.H - Founder"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
