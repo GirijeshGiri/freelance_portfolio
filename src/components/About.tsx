@@ -14,7 +14,7 @@ export default function About() {
             <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white mx-auto">
               <div className="w-full h-full bg-black/5 flex items-center justify-center text-black/20">
                 <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" 
+                  src="assets/about.jpg" 
                   alt="G.H - Founder"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
