@@ -62,8 +62,10 @@ export default function Portfolio() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-black">
-                  {project.category}
+                <div className="absolute top-4 left-4">
+                  <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-black uppercase tracking-widest">
+                    {project.category}
+                  </div>
                 </div>
               </div>
               
@@ -89,10 +91,13 @@ export default function Portfolio() {
                 </div>
 
                 <div className="mt-auto">
-                  <button className="w-full bg-black text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gold hover:text-black transition-all group/btn">
+                  <a 
+                    href="#contact"
+                    className="w-full bg-black text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gold hover:text-black transition-all group/btn"
+                  >
                     <Play size={16} className="fill-current" />
-                    View Demo
-                  </button>
+                    Get Free Demo
+                  </a>
                 </div>
               </div>
             </motion.div>

@@ -5,6 +5,7 @@ import LeadForm from './components/LeadForm';
 import Portfolio from './components/Portfolio';
 import WhyWorks from './components/WhyWorks';
 import Pricing from './components/Pricing';
+import SmartFeatures from './components/SmartFeatures';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import About from './components/About';
@@ -21,6 +22,7 @@ export default function App() {
         <WhoThisIsFor />
         <Portfolio />
         <WhyWorks />
+        <SmartFeatures />
         <Pricing />
         <Testimonials />
         <FAQ />

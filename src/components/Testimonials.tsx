@@ -38,7 +38,7 @@ export default function Testimonials() {
     const reviewsQuery = query(
       collection(db, 'reviews'),
       orderBy('createdAt', 'desc'),
-      limit(6)
+      limit(12)
     );
 
     const unsubscribeReviews = onSnapshot(reviewsQuery, (snapshot) => {
@@ -240,7 +240,7 @@ export default function Testimonials() {
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
               <motion.div 
-                key={review.id || index}
+                key={review.id || `dynamic-${index}`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}

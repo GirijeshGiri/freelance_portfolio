@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 const plans = [
   {
     name: "Starter",
-    price: "3,500",
+    price: "3,999",
     description: "Perfect for new small businesses.",
     features: [
       "Single Page Landing Site",
@@ -19,7 +19,7 @@ const plans = [
   },
   {
     name: "Growth",
-    price: "7,500",
+    price: "7,999",
     description: "Best for established local businesses.",
     features: [
       "Up to 5 Pages Website",
@@ -35,7 +35,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "10,000",
+    price: "14,999",
     description: "Complete digital solution for growth.",
     features: [
       "Multi-page Dynamic Site",
@@ -94,7 +94,7 @@ export default function Pricing() {
                   {plan.description}
                 </p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-bold">$</span>
+                  <span className="text-2xl font-bold">₹</span>
                   <span className="text-5xl font-black">{plan.price}</span>
                   <span className={`${plan.highlighted ? 'text-gray-400' : 'text-gray-500'} text-sm`}>/one-time</span>
                 </div>

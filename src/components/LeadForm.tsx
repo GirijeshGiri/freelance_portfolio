@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { MessageCircle, Send, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { db, collection, addDoc, Timestamp, handleFirestoreError, OperationType } from '../firebase';
 
 export default function LeadForm() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     businessType: '',
+    requirement: '',
+    budget: '',
+    timeline: '',
     message: ''
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
@@ -24,17 +28,22 @@ export default function LeadForm() {
     setStatus('loading');
 
     // 1. Prepare WhatsApp Message
-    const waMessage = `New Lead 🚀\nName: ${formData.name}\nPhone: ${formData.phone}\nBusiness: ${formData.businessType || 'N/A'}\nMessage: ${formData.message || 'N/A'}`;
+    const waMessage = `New Lead 🚀\nName: ${formData.name}\nPhone: ${formData.phone}\nBusiness: ${formData.businessType || 'N/A'}\nRequirement: ${formData.requirement || 'N/A'}\nBudget: ${formData.budget || 'N/A'}\nTimeline: ${formData.timeline || 'N/A'}\nMessage: ${formData.message || 'N/A'}`;
     const waUrl = `https://wa.me/8122934681?text=${encodeURIComponent(waMessage)}`;
 
-    // 2. Submit to FormSubmit (Email)
     try {
+      // 2. Store in Firestore (Leads)
+      await addDoc(collection(db, 'leads'), {
+        ...formData,
+        createdAt: Timestamp.now()
+      });
+
+      // 3. Submit to FormSubmit (Email)
       const formBody = new FormData();
-      formBody.append('name', formData.name);
-      formBody.append('phone', formData.phone);
-      formBody.append('business', formData.businessType);
-      formBody.append('message', formData.message);
-      formBody.append('_subject', 'New Website Lead');
+      Object.entries(formData).forEach(([key, value]) => {
+        formBody.append(key, String(value));
+      });
+      formBody.append('_subject', 'New G.H Web Solutions Lead');
       formBody.append('_captcha', 'false');
 
       await fetch(`https://formsubmit.co/ajax/jeshgiri52@gmail.com`, {
@@ -48,11 +57,19 @@ export default function LeadForm() {
       setTimeout(() => {
         window.open(waUrl, '_blank');
         setStatus('idle');
-        setFormData({ name: '', phone: '', businessType: '', message: '' });
+        setFormData({ 
+          name: '', 
+          phone: '', 
+          businessType: '', 
+          requirement: '',
+          budget: '',
+          timeline: '',
+          message: '' 
+        });
       }, 1500);
 
     } catch (error) {
-      console.error("Submission error:", error);
+      handleFirestoreError(error, OperationType.CREATE, 'leads');
       setStatus('idle');
     }
   };
@@ -60,7 +77,7 @@ export default function LeadForm() {
   return (
     <section id="contact" className="py-20 bg-gray-50">
       <div className="container-custom">
-        <div className="max-w-2xl mx-auto bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-gray-100">
+        <div className="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-gray-100">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">Get Your Free Website Demo</h2>
             <p className="text-gray-500">Fill in your details and we’ll contact you within minutes</p>
@@ -92,15 +109,69 @@ export default function LeadForm() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-black ml-1">Business Type (Optional)</label>
-              <input
-                type="text"
-                placeholder="e.g. Dental Clinic, Gym, etc."
-                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all outline-none"
-                value={formData.businessType}
-                onChange={(e) => setFormData({...formData, businessType: e.target.value})}
-              />
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-black ml-1">Business Type *</label>
+                <select
+                  required
+                  className="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all outline-none appearance-none"
+                  value={formData.businessType}
+                  onChange={(e) => setFormData({...formData, businessType: e.target.value})}
+                >
+                  <option value="">Select Business Type</option>
+                  <option value="Dental Clinic">Dental Clinic</option>
+                  <option value="Gym / Fitness">Gym / Fitness</option>
+                  <option value="Real Estate">Real Estate</option>
+                  <option value="Restaurant">Restaurant</option>
+                  <option value="E-commerce">E-commerce</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-black ml-1">Requirement *</label>
+                <select
+                  required
+                  className="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all outline-none appearance-none"
+                  value={formData.requirement}
+                  onChange={(e) => setFormData({...formData, requirement: e.target.value})}
+                >
+                  <option value="">Select Requirement</option>
+                  <option value="New Website">New Website</option>
+                  <option value="Redesign">Redesign</option>
+                  <option value="Lead Generation">Lead Generation</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-black ml-1">Budget Range *</label>
+                <select
+                  required
+                  className="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all outline-none appearance-none"
+                  value={formData.budget}
+                  onChange={(e) => setFormData({...formData, budget: e.target.value})}
+                >
+                  <option value="">Select Budget</option>
+                  <option value="₹3,999 - ₹7,999">₹3,999 - ₹7,999</option>
+                  <option value="₹7,999 - ₹14,999">₹7,999 - ₹14,999</option>
+                  <option value="₹15,000+">₹15,000+</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-black ml-1">Timeline *</label>
+                <select
+                  required
+                  className="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all outline-none appearance-none"
+                  value={formData.timeline}
+                  onChange={(e) => setFormData({...formData, timeline: e.target.value})}
+                >
+                  <option value="">Select Timeline</option>
+                  <option value="Within 7 Days">Within 7 Days</option>
+                  <option value="1-2 Weeks">1-2 Weeks</option>
+                  <option value="1 Month">1 Month</option>
+                </select>
+              </div>
             </div>
 
             <div className="space-y-2">

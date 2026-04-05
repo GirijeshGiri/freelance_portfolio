@@ -73,5 +73,18 @@ async function testConnection() {
 }
 testConnection();
 
+export async function submitLead(formData: any) {
+  try {
+    const docRef = await addDoc(collection(db, 'leads'), {
+      ...formData,
+      status: 'new',
+      createdAt: Timestamp.now()
+    });
+    return docRef.id;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.CREATE, 'leads');
+  }
+}
+
 export { collection, addDoc, onSnapshot, query, orderBy, limit, doc, Timestamp, signInWithPopup, signOut, onAuthStateChanged };
 export type { User };

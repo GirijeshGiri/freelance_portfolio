@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className={`text-xl font-bold tracking-tighter ${isScrolled ? 'text-black' : 'text-black'}`}>
-              Giri <span className="text-gold">Web Solutions</span>
+              G.H <span className="text-gold">Web Solutions</span>
             </span>
           </div>
 

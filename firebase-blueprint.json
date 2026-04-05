@@ -2,7 +2,7 @@
   "entities": {
     "Review": {
       "title": "Review",
-      "description": "A client review for Giri Web Solutions.",
+      "description": "A client review for G.H Web Solutions.",
       "type": "object",
       "properties": {
         "name": { "type": "string", "description": "Name of the reviewer." },
@@ -14,12 +14,32 @@
         "uid": { "type": "string", "description": "Firebase Auth UID of the reviewer." }
       },
       "required": ["name", "role", "content", "rating", "uid", "createdAt"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "A potential client lead from the contact form.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the lead." },
+        "phone": { "type": "string", "description": "Phone number of the lead." },
+        "businessType": { "type": "string", "description": "Type of business." },
+        "requirement": { "type": "string", "description": "Specific requirement (New Website, Redesign, etc.)" },
+        "budget": { "type": "string", "description": "Budget range." },
+        "timeline": { "type": "string", "description": "Expected timeline." },
+        "message": { "type": "string", "description": "Message from the lead." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the lead was created." }
+      },
+      "required": ["name", "phone", "businessType", "requirement", "budget", "timeline", "createdAt"]
     }
   },
   "firestore": {
     "/reviews/{reviewId}": {
       "schema": "Review",
       "description": "Collection of client reviews."
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Collection of potential client leads."
     }
   }
 }

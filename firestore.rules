@@ -56,6 +56,24 @@ service cloud.firestore {
       allow update, delete: if isOwner(resource.data.uid) || isAdmin();
     }
 
+    match /leads/{leadId} {
+      // Only admins can read leads
+      allow read: if isAdmin();
+      
+      // Anyone can create a lead (public form)
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'businessType', 'requirement', 'budget', 'timeline', 'createdAt']) &&
+                    request.resource.data.name is string && request.resource.data.name.size() > 0 &&
+                    request.resource.data.phone is string && request.resource.data.phone.size() >= 10 &&
+                    request.resource.data.businessType is string &&
+                    request.resource.data.requirement is string &&
+                    request.resource.data.budget is string &&
+                    request.resource.data.timeline is string &&
+                    request.resource.data.createdAt is timestamp;
+      
+      // No updates or deletes allowed for public
+      allow update, delete: if isAdmin();
+    }
+
     match /test/{docId} {
       allow read: if true;
     }

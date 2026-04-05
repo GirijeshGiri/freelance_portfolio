@@ -21,7 +21,7 @@ export default function CTA() {
             Ready to Get <span className="text-gradient-gold">More Customers?</span>
           </h2>
           <p className="text-xl text-gray-300 mb-12 leading-relaxed">
-            Stop losing leads to competitors with better websites. Let’s build a website that actually brings you business.
+            Stop losing customers to competitors. Let’s build a website that actually brings you business.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
@@ -43,9 +43,9 @@ export default function CTA() {
             </a>
           </div>
 
-          <div className="inline-flex items-center gap-2 text-gold font-bold animate-pulse">
+          <div className="inline-flex items-center gap-2 text-gold font-bold">
             <span className="w-2 h-2 bg-gold rounded-full"></span>
-            <span className="uppercase tracking-widest text-sm">⚡ Limited slots available this week</span>
+            <span className="uppercase tracking-widest text-sm">Your digital growth starts here.</span>
           </div>
         </motion.div>
       </div>

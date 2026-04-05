@@ -20,7 +20,7 @@ export default function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
             </span>
-            <span>Premium Web Solutions for Global Brands</span>
+            <span>High-Converting Websites for Local & Growing Businesses</span>
           </motion.div>
           
           <motion.h1 
@@ -78,7 +78,7 @@ export default function Hero() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="text-gold" size={18} />
-              <span>✔ WhatsApp integration included</span>
+              <span>✔ WhatsApp support included</span>
             </div>
           </motion.div>
         </div>
