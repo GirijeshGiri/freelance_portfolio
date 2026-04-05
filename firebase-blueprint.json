@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Review",
+      "description": "A client review for Giri Web Solutions.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the reviewer." },
+        "role": { "type": "string", "description": "Business role or company of the reviewer." },
+        "content": { "type": "string", "description": "The review text content." },
+        "rating": { "type": "number", "description": "Rating from 1 to 5." },
+        "avatar": { "type": "string", "description": "URL to the reviewer's avatar image." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the review was created." },
+        "uid": { "type": "string", "description": "Firebase Auth UID of the reviewer." }
+      },
+      "required": ["name", "role", "content", "rating", "uid", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Collection of client reviews."
+    }
+  }
+}

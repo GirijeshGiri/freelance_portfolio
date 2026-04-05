@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: reviews
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, 1-100 chars) - Name of the reviewer
+    //   - role: string (required, 1-100 chars) - Business role/company
+    //   - content: string (required, 1-1000 chars) - Review text
+    //   - rating: number (required, 1-5) - Star rating
+    //   - avatar: string (optional, URL) - Reviewer photo
+    //   - uid: string (required) - Owner UID
+    //   - createdAt: timestamp (required) - Creation time
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "jeshgiri52@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['name', 'role', 'content', 'rating', 'uid', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.role is string && data.role.size() > 0 && data.role.size() <= 100 &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 1000 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.uid is string && data.uid == request.auth.uid &&
+             data.createdAt is timestamp;
+    }
+
+    match /reviews/{reviewId} {
+      // Publicly readable
+      allow read: if true;
+      
+      // Only authenticated users can create their own reviews
+      allow create: if isAuthenticated() && isValidReview(request.resource.data);
+      
+      // Only owners or admins can update/delete
+      allow update, delete: if isOwner(resource.data.uid) || isAdmin();
+    }
+
+    match /test/{docId} {
+      allow read: if true;
+    }
+  }
+}

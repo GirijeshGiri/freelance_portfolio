@@ -16,11 +16,11 @@ const faqs = [
   },
   {
     question: "Can you help my business show up on Google?",
-    answer: "Yes! Every site we build includes basic Local SEO optimization. We also help you set up your Google Business Profile to ensure you show up in local Chennai searches."
+    answer: "Yes! Every site we build includes basic Local SEO optimization. We also help you set up your Google Business Profile to ensure you show up in local searches."
   },
   {
     question: "Are there any hidden monthly fees?",
-    answer: "No hidden fees. You pay for the build once. After the first year, you only pay a small annual fee for domain and hosting renewal (approx ₹2000-₹3000/year)."
+    answer: "No hidden fees. You pay for the build once. After the first year, you only pay a small annual fee for domain and hosting renewal (approx $30-$50/year)."
   }
 ];
 
@@ -33,7 +33,7 @@ export default function FAQ() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-gold font-bold tracking-widest uppercase text-sm mb-3">FAQ</h2>
-            <h3 className="text-3xl md:text-5xl font-bold text-navy mb-6">Common Questions</h3>
+            <h3 className="text-3xl md:text-5xl font-bold text-black mb-6">Common <span className="text-gradient-gold">Questions</span></h3>
           </div>
 
           <div className="space-y-4">
@@ -46,7 +46,7 @@ export default function FAQ() {
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
                   className="w-full flex items-center justify-between p-6 text-left bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
-                  <span className="font-bold text-navy pr-8">{faq.question}</span>
+                  <span className="font-bold text-black pr-8">{faq.question}</span>
                   {openIndex === index ? <ChevronUp className="text-gold" /> : <ChevronDown className="text-gold" />}
                 </button>
                 

@@ -26,7 +26,7 @@ export default function Navbar() {
       <div className="container-custom">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <span className={`text-xl font-bold tracking-tighter ${isScrolled ? 'text-navy' : 'text-navy'}`}>
+            <span className={`text-xl font-bold tracking-tighter ${isScrolled ? 'text-black' : 'text-black'}`}>
               Giri <span className="text-gold">Web Solutions</span>
             </span>
           </div>
@@ -37,16 +37,16 @@ export default function Navbar() {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm font-medium text-navy hover:text-gold transition-colors"
+                className="text-sm font-medium text-black hover:text-gold transition-colors"
               >
                 {link.name}
               </a>
             ))}
             <a
               href="#contact"
-              className="bg-navy text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-navy-light transition-all shadow-lg hover:shadow-xl"
+              className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-gold hover:text-black transition-all shadow-lg hover:shadow-xl"
             >
-              Get Free Demo
+              Get Free Website Demo
             </a>
           </div>
 
@@ -54,7 +54,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-navy p-2"
+              className="text-black p-2"
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -69,7 +69,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block text-lg font-medium text-navy hover:text-gold transition-colors"
+                className="block text-lg font-medium text-black hover:text-gold transition-colors"
               >
                 {link.name}
               </a>
@@ -77,7 +77,7 @@ export default function Navbar() {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="block bg-navy text-white text-center px-6 py-3 rounded-xl font-semibold"
+              className="block bg-black text-white text-center px-6 py-3 rounded-xl font-semibold"
             >
               Get Free Demo
             </a>
